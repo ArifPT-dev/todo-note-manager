@@ -38,18 +38,21 @@ export default function DashboardClient() {
         )}
 
         <div className="flex justify-center gap-4">
-          <button
-            onClick={() => router.push('/todos')}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700"
-          >
-            รายการสิ่งที่ต้องทำ
-          </button>
-          <button
-            onClick={() => router.push('/notes')}
-            className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700"
-          >
-            โน้ตของฉัน
-          </button>
+        <button
+  className="w-full sm:w-auto px-4 py-2 text-white font-semibold rounded-xl
+             text-sm sm:text-base leading-snug text-center
+             bg-blue-600 hover:bg-blue-700 whitespace-normal break-words"
+>
+  รายการสิ่งที่ต้องทำ
+</button>
+
+<button
+  className="w-full sm:w-auto px-4 py-2 text-white font-semibold rounded-xl
+             text-sm sm:text-base leading-snug text-center
+             bg-green-600 hover:bg-green-700 whitespace-normal break-words"
+>
+  โน้ตของฉัน
+</button>
         </div>
       </div>
     </div>

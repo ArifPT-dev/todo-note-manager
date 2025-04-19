@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'To-Do & Note Manager',
   description: 'จัดการชีวิตด้วยสิ่งที่ต้องทำและโน้ตส่วนตัว',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -19,8 +22,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.className}>
         <Navbar userEmail={session?.user?.email ?? ''} />
         <main>{children}</main>
-
-        {/* ✅ Footer แบบง่าย */}
         <footer className="text-center text-gray-500 text-sm py-6 bg-gray-100 mt-8">
           © 2025 To-Do & Note Manager. All rights reserved.
         </footer>
