@@ -51,7 +51,7 @@ export default function TooltipText({ text }: Props) {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow max-w-sm w-full text-center">
-            <h2 className="text-lg font-bold mb-4">รายละเอียด</h2>
+            <h2 className="text-lg font-bold mb-4 text-gray-400">รายละเอียด</h2>
             <p className="text-gray-700 break-words">{text}</p>
             <button
               onClick={() => setShowModal(false)}

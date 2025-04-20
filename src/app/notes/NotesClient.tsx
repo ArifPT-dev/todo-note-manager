@@ -95,7 +95,7 @@ export default function NotesClient() {
         {loading ? (
           <p className="text-center text-gray-500">กำลังโหลด...</p>
         ) : notes.length === 0 ? (
-          <p className="text-center text-gray-400">ยังไม่มีโน้ต</p>
+          <p className="text-center text-gray-500">ยังไม่มีโน้ต</p>
         ) : (
           <div className="space-y-4">
             {notes.map((note) => (

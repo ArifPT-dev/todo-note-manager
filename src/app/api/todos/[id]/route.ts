@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
@@ -33,4 +33,20 @@ export async function DELETE(
   });
 
   return NextResponse.json({ message: 'Todo deleted' });
+}
+
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const id = Number(params.id);
+  const { title } = await req.json();
+
+  try {
+    const updated = await prisma.todo.update({
+      where: { id },
+      data: { title },
+    });
+
+    return NextResponse.json({ todo: updated });
+  } catch (err) {
+    return NextResponse.json({ error: 'Update failed' }, { status: 500 });
+  }
 }

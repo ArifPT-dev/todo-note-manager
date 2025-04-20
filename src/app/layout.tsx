@@ -22,7 +22,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.className}>
         <Navbar userEmail={session?.user?.email ?? ''} />
         <main>{children}</main>
-        <footer className="text-center text-gray-500 text-sm py-6 bg-gray-100 mt-8">
+        <footer className="text-center text-gray-100 text-sm py-3 bg-green-500 mt-0">
           © 2025 To-Do & Note Manager. All rights reserved.
         </footer>
       </body>

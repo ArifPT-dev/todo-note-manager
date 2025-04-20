@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TooltipText from '@/components/TooltipText';
 
 type Todo = {
@@ -12,16 +12,68 @@ export default function TodosClient() {
   const [newTodo, setNewTodo] = useState('');
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editedTitle, setEditedTitle] = useState('');
 
-  const handleAddTodo = () => {
+  useEffect(() => {
+    const fetchTodos = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/todos');
+        const data = await res.json();
+        setTodos(Array.isArray(data.todos) ? data.todos : []);
+      } catch (err) {
+        console.error('โหลด To-do ไม่สำเร็จ:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTodos();
+  }, []);
+
+  const handleAddTodo = async () => {
     if (!newTodo.trim()) return;
-    const todo = { id: Date.now(), title: newTodo.trim() };
-    setTodos([todo, ...todos]);
-    setNewTodo('');
+    try {
+      const res = await fetch('/api/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTodo }),
+      });
+      const data = await res.json();
+      setTodos([data.todo, ...todos]);
+      setNewTodo('');
+    } catch (err) {
+      console.error('เพิ่ม To-do ไม่สำเร็จ:', err);
+    }
   };
 
-  const handleDelete = (id: number) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  const handleDelete = async (id: number) => {
+    try {
+      await fetch(`/api/todos/${id}`, { method: 'DELETE' });
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (err) {
+      console.error('ลบ To-do ไม่สำเร็จ:', err);
+    }
+  };
+
+  const handleUpdate = async (id: number) => {
+    if (!editedTitle.trim()) return;
+    try {
+      await fetch(`/api/todos/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: editedTitle }),
+      });
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo.id === id ? { ...todo, title: editedTitle } : todo
+        )
+      );
+      setEditingId(null);
+      setEditedTitle('');
+    } catch (err) {
+      console.error('อัปเดต To-do ไม่สำเร็จ:', err);
+    }
   };
 
   return (
@@ -53,19 +105,50 @@ export default function TodosClient() {
           <ul className="space-y-4">
             {todos.map((todo) => (
               <li
-                key={todo.id}
-                className="flex justify-between items-center bg-gray-50 p-4 rounded-xl shadow-sm"
-              >
-                {/* ✅ ใช้ TooltipText แทน <span> */}
-                <TooltipText text={todo.title} />
-
+              key={todo.id}
+              className="flex justify-between items-start bg-gray-50 p-4 rounded-xl shadow-sm"
+            >
+              {/* ✅ เพิ่ม max-w และ break-words ในกล่องแสดงข้อความ */}
+              <div className="flex-1 mr-4 max-w-[75%] overflow-hidden break-words">
+                {editingId === todo.id ? (
+                  <input
+                    type="text"
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded text-sm text-gray-400"
+                  />
+                ) : (
+                  <TooltipText text={todo.title} />
+                )}
+              </div>
+            
+              <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 ml-4 shrink-0 text-right sm:text-left">
+                {editingId === todo.id ? (
+                  <button
+                    onClick={() => handleUpdate(todo.id)}
+                    className="text-sm text-green-600 hover:underline"
+                  >
+                    บันทึก
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setEditingId(todo.id);
+                      setEditedTitle(todo.title);
+                    }}
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    แก้ไข
+                  </button>
+                )}
                 <button
                   onClick={() => handleDelete(todo.id)}
                   className="text-sm text-red-500 hover:underline"
                 >
                   ลบ
                 </button>
-              </li>
+              </div>
+            </li>            
             ))}
           </ul>
         )}

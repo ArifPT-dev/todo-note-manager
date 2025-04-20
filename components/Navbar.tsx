@@ -9,7 +9,7 @@ export default function Navbar({ userEmail }: { userEmail?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-green-600 text-white px-6 py-3">
+    <nav className="bg-green-500 text-white px-6 py-6">
       <div className="flex justify-between items-center max-w-6xl mx-auto">
         <div className="text-xl font-bold flex items-center gap-2">
           <Image src="/favicon.png" alt="Logo" width={28} height={28} />
